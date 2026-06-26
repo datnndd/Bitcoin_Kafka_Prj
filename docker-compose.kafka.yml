@@ -1,0 +1,46 @@
+services:
+  redpanda:
+    image: ${REDPANDA_IMAGE:-redpandadata/redpanda:v26.1.11}
+    command:
+      - redpanda
+      - start
+      - --overprovisioned
+      - --smp
+      - "1"
+      - --memory
+      - 512M
+      - --reserve-memory
+      - 0M
+      - --node-id
+      - "0"
+      - --check=false
+      - --kafka-addr
+      - PLAINTEXT://0.0.0.0:9092
+      - --advertise-kafka-addr
+      - PLAINTEXT://localhost:9092
+    ports:
+      - "9092:9092"
+      - "9644:9644"
+    volumes:
+      - redpanda_data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health -X brokers=localhost:9092 | grep 'Healthy: *true'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  kafka-init:
+    image: ${REDPANDA_IMAGE:-redpandadata/redpanda:v26.1.11}
+    environment:
+      RPK_BROKERS: redpanda:9092
+    depends_on:
+      redpanda:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "rpk topic create crypto.trades.raw --partitions 1 --replicas 1 || true &&
+       rpk topic create crypto.whales.detected --partitions 1 --replicas 1 || true &&
+       rpk topic list"
+
+volumes:
+  redpanda_data:

@@ -35,6 +35,7 @@ flowchart LR
 - `SPEC.md`: Databricks-first product specification.
 - `docs/databricks/README.md`: Databricks implementation guide.
 - `docs/databricks/kafka-connectivity.md`: Kafka endpoint options for Databricks.
+- `docs/databricks/kafka-smoke-test.md`: Binance/Kafka smoke test notes.
 - `docs/databricks/deployment.md`: setup and deployment checklist.
 - `docs/databricks/cli-setup.md`: Windows CLI wrapper and login steps.
 - `docs/architecture-overview.md`: architecture diagram and design choices.
@@ -59,6 +60,25 @@ Run tests and deterministic fixture validation:
 python -m unittest discover -s tests/unit
 python -m src.validation.local_medallion_e2e --fixture tests\fixtures\binance_trades.ndjson --output-root data\e2e --report reports\m5\medallion-e2e.md
 ```
+
+## Kafka Smoke Test
+
+Start local Kafka-compatible broker:
+
+```powershell
+$env:REDPANDA_IMAGE="redpandadata/redpanda:v26.1.11"
+docker compose -f docker-compose.kafka.yml up -d
+```
+
+
+Test fixture produce/consume once Kafka exists:
+
+```powershell
+python scripts\databricks\kafka_smoke_test.py --bootstrap-servers localhost:9092 --topic crypto.trades.raw
+python scripts\databricks\binance_kafka_live_smoke.py --bootstrap-servers localhost:9092 --topic crypto.trades.raw --count 3
+```
+
+Current local blocker: no Kafka broker reachable; Docker image pulls failed with CloudFront EOF.
 
 ## Producer Dry Run
 
