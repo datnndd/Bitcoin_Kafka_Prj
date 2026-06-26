@@ -1,0 +1,55 @@
+bundle:
+  name: crypto-whale-lakehouse
+
+variables:
+  catalog:
+    default: main
+  schema:
+    default: crypto_whale
+  kafka_bootstrap_servers:
+    default: CHANGE_ME:9092
+  kafka_raw_topic:
+    default: crypto.trades.raw
+  whale_threshold_usd:
+    default: "100000"
+
+resources:
+  pipelines:
+    crypto_whale_medallion:
+      name: crypto-whale-medallion
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      libraries:
+        - file:
+            path: databricks/pipelines/crypto_whale_pipeline.py
+      configuration:
+        kafka.bootstrap.servers: ${var.kafka_bootstrap_servers}
+        kafka.raw.topic: ${var.kafka_raw_topic}
+        whale.threshold.usd: ${var.whale_threshold_usd}
+
+  jobs:
+    crypto_whale_lakehouse_job:
+      name: crypto-whale-lakehouse-job
+      job_clusters:
+        - job_cluster_key: alert_cluster
+          new_cluster:
+            spark_version: 15.4.x-scala2.12
+            node_type_id: i3.xlarge
+            num_workers: 1
+      tasks:
+        - task_key: run_medallion_pipeline
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.crypto_whale_medallion.id}
+        - task_key: send_telegram_alerts
+          depends_on:
+            - task_key: run_medallion_pipeline
+          job_cluster_key: alert_cluster
+          spark_python_task:
+            python_file: databricks/jobs/telegram_alert_task.py
+            parameters:
+              - --catalog
+              - ${var.catalog}
+              - --schema
+              - ${var.schema}
+              - --dry_run
+              - "true"
