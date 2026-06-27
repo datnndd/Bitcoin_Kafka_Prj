@@ -27,7 +27,7 @@ def pipeline_conf(name: str, default: str) -> str:
 
 def kafka_options() -> dict[str, str]:
     options = {
-        "kafka.bootstrap.servers": pipeline_conf("kafka.bootstrap.servers", "CHANGE_ME:9092"),
+        "kafka.bootstrap.servers": pipeline_conf("kafka.bootstrap.servers", "VM_IP:9092"),
         "subscribe": pipeline_conf("kafka.raw.topic", "crypto.trades.raw"),
         "startingOffsets": pipeline_conf("kafka.starting.offsets", "latest"),
     }

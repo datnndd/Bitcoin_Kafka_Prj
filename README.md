@@ -88,7 +88,7 @@ Run Binance payload normalization without Kafka:
 python -m src.producer.main --fixture tests\fixtures\binance_trades.ndjson --dry-run
 ```
 
-For Databricks runs, configure producer to write to a Kafka endpoint reachable from Databricks, such as Confluent Cloud or Kafka/Redpanda on a cloud VM.
+For Databricks runs, configure producer to write to Kafka/Redpanda on a cloud VM reachable from Databricks. Use the VM public IP or DNS name as `VM_IP:9092`.
 
 ## Databricks CLI
 
@@ -102,8 +102,8 @@ Use wrapper if `databricks` is not on PATH:
 
 ## Databricks Deployment Outline
 
-1. Create or choose Kafka endpoint reachable from Databricks.
-2. Configure Kafka credentials in Databricks secrets.
+1. Create Kafka/Redpanda on a cloud VM reachable from Databricks.
+2. Set `PUBLIC_KAFKA_HOST` on the VM to the VM public IP or DNS name.
 3. Deploy `databricks/pipelines/crypto_whale_pipeline.py` as a Lakeflow Declarative Pipeline.
 4. Run pipeline to create Bronze/Silver/Gold Delta tables.
 5. Run Telegram alert task through Lakeflow Job.

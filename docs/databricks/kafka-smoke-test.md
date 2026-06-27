@@ -1,8 +1,8 @@
-# Local Kafka Smoke Test
+# Kafka Smoke Test
 
 ## Purpose
 
-Test the real ingestion path before VPS/Databricks deployment:
+Test the real ingestion path before VM/Databricks deployment:
 
 ```text
 Binance fixture/producer -> Kafka-compatible broker -> Kafka consumer
@@ -10,7 +10,7 @@ Binance fixture/producer -> Kafka-compatible broker -> Kafka consumer
 
 ## Start Local Kafka-Compatible Broker
 
-This repo uses Redpanda for local/VPS smoke tests because it is Kafka API-compatible and runs as one container.
+This repo uses Redpanda for local/VM smoke tests because it is Kafka API-compatible and runs as one container.
 
 ```powershell
 $env:REDPANDA_IMAGE="redpandadata/redpanda:v26.1.11"
@@ -66,12 +66,27 @@ python -m src.producer.main
 
 Stop with `Ctrl+C` after enough events.
 
-## VPS Notes
+## VM Notes
 
-On VPS, this same file can run Kafka-compatible Redpanda. Change advertised address if Databricks must read it from outside:
+On the VM, run this compose file with the public address advertised:
+
+```powershell
+$env:PUBLIC_KAFKA_HOST="<vm-public-ip-or-domain>"
+$env:REDPANDA_IMAGE="redpandadata/redpanda:v26.1.11"
+docker compose -f docker-compose.kafka.yml up -d
+```
+
+The compose file expands that value into:
 
 ```yaml
---advertise-kafka-addr PLAINTEXT://<vps-public-ip-or-domain>:9092
+--advertise-kafka-addr PLAINTEXT://<vm-public-ip-or-domain>:9092
+```
+
+From your laptop, test the VM broker:
+
+```powershell
+python scripts\databricks\kafka_smoke_test.py --bootstrap-servers <vm-public-ip-or-domain>:9092 --topic crypto.trades.raw
+python scripts\databricks\binance_kafka_live_smoke.py --bootstrap-servers <vm-public-ip-or-domain>:9092 --topic crypto.trades.raw --count 3
 ```
 
 Open firewall/security group for `9092` only from trusted Databricks egress or your IP.

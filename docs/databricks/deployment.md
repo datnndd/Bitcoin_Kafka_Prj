@@ -4,15 +4,15 @@
 
 - Databricks workspace available.
 - Unity Catalog catalog/schema chosen.
-- Kafka endpoint reachable from Databricks.
+- Kafka/Redpanda VM endpoint reachable from Databricks, e.g. `VM_IP:9092`.
 - Kafka topic `crypto.trades.raw` exists.
 - Producer can write normalized JSON events to Kafka.
 
 ## Deploy
 
 ```powershell
-databricks bundle validate
-databricks bundle deploy
+databricks bundle validate --var="kafka_bootstrap_servers=VM_IP:9092"
+databricks bundle deploy --var="kafka_bootstrap_servers=VM_IP:9092"
 ```
 
 If not using Asset Bundles, create a Lakeflow Declarative Pipeline manually and point it to `databricks/pipelines/crypto_whale_pipeline.py`.
@@ -31,10 +31,10 @@ If not using Asset Bundles, create a Lakeflow Declarative Pipeline manually and 
 - Profile: `crypto-whale`
 - Host: `https://dbc-942476c2-e58d.cloud.databricks.com`
 - Bundle validation: passed after adding `alert_cluster` job cluster.
-- Deployment blocked until Kafka bootstrap server is configured.
+- Deployment waits on Kafka VM bootstrap server, e.g. `VM_IP:9092`.
 
 Validate command:
 
 ```powershell
-.\scripts\databricks\dbx.ps1 bundle validate --profile crypto-whale
+.\scripts\databricks\dbx.ps1 bundle validate --profile crypto-whale --var="kafka_bootstrap_servers=VM_IP:9092"
 ```

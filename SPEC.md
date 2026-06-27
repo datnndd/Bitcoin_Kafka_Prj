@@ -67,8 +67,8 @@ Databricks clusters cannot read `localhost:9092` on a developer laptop. For the 
 
 Recommended options:
 
-1. Confluent Cloud Kafka.
-2. Redpanda/Kafka on a cloud VM.
+1. Redpanda/Kafka on a cloud VM.
+2. Optional managed Kafka only if VM hosting is not available.
 3. Local tunnel only for short demos, not preferred.
 
 Local Kafka remains useful for local tests, but Databricks production-like runs require a cloud-accessible Kafka endpoint.

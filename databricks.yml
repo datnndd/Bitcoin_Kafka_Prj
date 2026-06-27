@@ -7,7 +7,7 @@ variables:
   schema:
     default: crypto_whale
   kafka_bootstrap_servers:
-    default: CHANGE_ME:9092
+    default: VM_IP:9092
   kafka_raw_topic:
     default: crypto.trades.raw
   whale_threshold_usd:

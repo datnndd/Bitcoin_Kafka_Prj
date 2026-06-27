@@ -32,8 +32,8 @@ Use:
 
 ## Deployment Steps
 
-1. Create Kafka endpoint reachable from Databricks.
-2. Store Kafka credentials in Databricks secrets if SASL/SSL is required.
+1. Create Redpanda/Kafka on a cloud VM reachable from Databricks.
+2. Configure the broker to advertise `VM_IP:9092`, not `localhost:9092`.
 3. Configure `databricks.yml` variables.
 4. Deploy bundle or create the Lakeflow pipeline manually from `databricks/pipelines/crypto_whale_pipeline.py`.
 5. Run pipeline and verify Delta tables.
