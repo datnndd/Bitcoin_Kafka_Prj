@@ -31,6 +31,10 @@ resources:
   jobs:
     crypto_whale_lakehouse_job:
       name: crypto-whale-lakehouse-job
+      schedule:
+        quartz_cron_expression: "0 0/10 * * * ?"
+        timezone_id: "Asia/Ho_Chi_Minh"
+        pause_status: "UNPAUSED"
       tasks:
         - task_key: run_medallion_pipeline
           pipeline_task:
