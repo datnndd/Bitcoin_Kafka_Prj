@@ -19,6 +19,7 @@ resources:
       name: crypto-whale-medallion
       catalog: ${var.catalog}
       schema: ${var.schema}
+      serverless: true
       libraries:
         - file:
             path: databricks/pipelines/crypto_whale_pipeline.py
@@ -30,12 +31,6 @@ resources:
   jobs:
     crypto_whale_lakehouse_job:
       name: crypto-whale-lakehouse-job
-      job_clusters:
-        - job_cluster_key: alert_cluster
-          new_cluster:
-            spark_version: 15.4.x-scala2.12
-            node_type_id: i3.xlarge
-            num_workers: 1
       tasks:
         - task_key: run_medallion_pipeline
           pipeline_task:
@@ -43,7 +38,6 @@ resources:
         - task_key: send_telegram_alerts
           depends_on:
             - task_key: run_medallion_pipeline
-          job_cluster_key: alert_cluster
           spark_python_task:
             python_file: databricks/jobs/telegram_alert_task.py
             parameters:
@@ -53,3 +47,8 @@ resources:
               - ${var.schema}
               - --dry_run
               - "true"
+          environment_key: serverless_alerts
+      environments:
+        - environment_key: serverless_alerts
+          spec:
+            environment_version: "2"

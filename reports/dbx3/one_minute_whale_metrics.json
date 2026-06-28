@@ -1,0 +1,86 @@
+{
+  "manifest": {
+    "chunks": [
+      {
+        "chunk_index": 0,
+        "row_count": 1,
+        "row_offset": 0
+      }
+    ],
+    "format": "JSON_ARRAY",
+    "schema": {
+      "column_count": 7,
+      "columns": [
+        {
+          "name": "window_start",
+          "position": 0,
+          "type_name": "TIMESTAMP",
+          "type_text": "TIMESTAMP"
+        },
+        {
+          "name": "window_end",
+          "position": 1,
+          "type_name": "TIMESTAMP",
+          "type_text": "TIMESTAMP"
+        },
+        {
+          "name": "symbol",
+          "position": 2,
+          "type_name": "STRING",
+          "type_text": "STRING"
+        },
+        {
+          "name": "side_inferred",
+          "position": 3,
+          "type_name": "STRING",
+          "type_text": "STRING"
+        },
+        {
+          "name": "trade_count",
+          "position": 4,
+          "type_name": "LONG",
+          "type_text": "BIGINT"
+        },
+        {
+          "name": "total_notional_usd",
+          "position": 5,
+          "type_name": "DECIMAL",
+          "type_precision": 38,
+          "type_scale": 12,
+          "type_text": "DECIMAL(38,12)"
+        },
+        {
+          "name": "max_notional_usd",
+          "position": 6,
+          "type_name": "DECIMAL",
+          "type_precision": 38,
+          "type_scale": 12,
+          "type_text": "DECIMAL(38,12)"
+        }
+      ]
+    },
+    "total_chunk_count": 1,
+    "total_row_count": 1,
+    "truncated": false
+  },
+  "result": {
+    "chunk_index": 0,
+    "data_array": [
+      [
+        "2024-03-09T16:00:00.000Z",
+        "2024-03-09T16:01:00.000Z",
+        "BTCUSDT",
+        "BUY",
+        "1",
+        "162500.000000000000",
+        "162500.000000000000"
+      ]
+    ],
+    "row_count": 1,
+    "row_offset": 0
+  },
+  "statement_id": "01f1722d-0c3f-166d-aa46-825d05ff0893",
+  "status": {
+    "state": "SUCCEEDED"
+  }
+}

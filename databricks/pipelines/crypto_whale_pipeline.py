@@ -1,4 +1,3 @@
-﻿# Databricks notebook source
 # Lakeflow Declarative Pipeline for crypto whale medallion tables.
 
 import dlt

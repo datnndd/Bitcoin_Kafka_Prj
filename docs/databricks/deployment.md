@@ -3,6 +3,7 @@
 ## Before Deploy
 
 - Databricks workspace available.
+- Workspace uses serverless compute for Lakeflow pipeline and job tasks.
 - Unity Catalog catalog/schema chosen.
 - Kafka/Redpanda VM endpoint reachable from Databricks, e.g. `VM_IP:9092`.
 - Kafka topic `crypto.trades.raw` exists.
@@ -31,6 +32,7 @@ If not using Asset Bundles, create a Lakeflow Declarative Pipeline manually and 
 - Profile: `crypto-whale`
 - Host: `https://dbc-942476c2-e58d.cloud.databricks.com`
 - Bundle validation: passed after adding `alert_cluster` job cluster.
+- Bundle now uses serverless pipeline/job compute because this workspace requires serverless.
 - Deployment waits on Kafka VM bootstrap server, e.g. `VM_IP:9092`.
 
 Validate command:
