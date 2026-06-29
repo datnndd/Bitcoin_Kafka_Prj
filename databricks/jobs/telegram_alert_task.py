@@ -14,6 +14,9 @@ def parse_args():
     parser.add_argument("--dry_run", default="true")
     parser.add_argument("--telegram_bot_token", default="")
     parser.add_argument("--telegram_chat_id", default="")
+    parser.add_argument("--telegram_secret_scope", default="crypto-whale")
+    parser.add_argument("--telegram_bot_token_key", default="telegram-bot-token")
+    parser.add_argument("--telegram_chat_id_key", default="telegram-chat-id")
     return parser.parse_args()
 
 
@@ -23,6 +26,9 @@ schema = args.schema
 dry_run = args.dry_run.lower() == "true"
 bot_token = args.telegram_bot_token
 chat_id = args.telegram_chat_id
+if not dry_run and (not bot_token or not chat_id):
+    bot_token = bot_token or dbutils.secrets.get(scope=args.telegram_secret_scope, key=args.telegram_bot_token_key)
+    chat_id = chat_id or dbutils.secrets.get(scope=args.telegram_secret_scope, key=args.telegram_chat_id_key)
 source_table = f"{catalog}.{schema}.gold_whale_events"
 alert_state_table = f"{catalog}.{schema}.telegram_alert_state"
 

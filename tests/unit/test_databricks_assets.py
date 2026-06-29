@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import unittest
 from pathlib import Path
@@ -23,7 +23,7 @@ class DatabricksAssetTests(unittest.TestCase):
         self.assertIn("databricks/pipelines/crypto_whale_pipeline.py", bundle)
         self.assertIn("databricks/jobs/telegram_alert_task.py", bundle)
 
-    def test_telegram_task_defaults_to_dry_run(self) -> None:
+    def test_telegram_task_supports_real_send_secrets(self) -> None:
         code = Path("databricks/jobs/telegram_alert_task.py").read_text(encoding="utf-8")
 
         self.assertIn('parser.add_argument("--dry_run", default="true")', code)
