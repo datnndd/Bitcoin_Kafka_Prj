@@ -13,21 +13,6 @@ The current implementation is Databricks-first and has been validated end to end
 - Serves dashboard-ready analytics through Databricks SQL warehouse queries.
 - Keeps local Python tests and fixture replay for deterministic proof.
 
-## Architecture
-
-```mermaid
-flowchart LR
-    A["Binance WebSocket"] --> B["Python Producer"]
-    B --> C["Kafka/Redpanda on VM"]
-    C --> D["Lakeflow Declarative Pipeline"]
-    D --> E["Bronze Delta"]
-    E --> F["Silver Delta"]
-    F --> G["Gold whale events"]
-    F --> H["Gold 1m metrics"]
-    G --> I["Databricks SQL Dashboard"]
-    G --> J["Lakeflow Job: dry-run Telegram alerts"]
-```
-
 ## End-to-End Proof
 
 | Story | Status | Evidence |
@@ -38,25 +23,26 @@ flowchart LR
 
 Latest SQL evidence is stored in `reports/dbx3/sql-evidence.md`.
 
-Validated sample Gold result:
+### Architecture
 
-```text
-BTCUSDT BUY 2.5 BTC @ 65000 USDT = 162500 USDT
-trade_id=123456789
-```
+![Architecture diagram](docs/images/architecture.png)
 
-## Screenshots To Add
+### Databricks Pipeline
 
-Add images later under `docs/images/` and reference them from this README.
+![Databricks pipeline successful update](docs/images/databricks-pipeline-success.png)
 
-| Image | Suggested path | Purpose |
-| --- | --- | --- |
-| Architecture diagram export | `docs/images/architecture.png` | One-glance system overview for recruiters |
-| Databricks pipeline successful update | `docs/images/databricks-pipeline-success.png` | Proof that Bronze/Silver/Gold Lakeflow update completed |
-| Databricks job run success | `docs/images/databricks-job-success.png` | Proof that pipeline task and dry-run Telegram task succeeded |
-| Gold whale events query result | `docs/images/gold-whale-events-query.png` | Shows real dashboard source data |
-| SQL dashboard or query grid | `docs/images/databricks-sql-dashboard.png` | Portfolio dashboard screenshot |
-| Kafka VM smoke test terminal | `docs/images/kafka-vm-smoke-test.png` | Shows producer/consumer path through VM Kafka |
+### Databricks Job
+
+![Databricks job run success](docs/images/databricks-job-success.png)
+
+### Databricks SQL Dashboard
+
+![Databricks SQL dashboard](docs/images/databricks-sql-dashboard.png)
+
+### Kafka VM
+
+![Kafka VM  terminal](docs/images/kafka-vm-smoke-test.png)
+
 
 ## Repository Map
 
@@ -167,10 +153,3 @@ Captured query evidence lives in `reports/dbx3/sql-evidence.md`.
 - `docs/analytics.md`: SQL analytics guide.
 - `docs/cv-bullets.md`: resume bullets and interview talking points.
 
-## CV Summary
-
-- Built a Kafka-to-Databricks Lakehouse for near-real-time crypto whale trade analytics.
-- Hosted Kafka-compatible Redpanda on a cloud VM and streamed normalized Binance trade events.
-- Implemented Bronze/Silver/Gold Delta tables with quality gates, deduplication, and replayable transformations.
-- Deployed serverless Lakeflow pipeline and Lakeflow Job orchestration through Databricks Asset Bundles.
-- Served portfolio analytics through Databricks SQL queries and captured query evidence from Gold tables.
